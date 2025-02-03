@@ -1,6 +1,6 @@
-let treinos = []; // Simulação de banco de dados
+let treinos = []; 
 
-// Criar um novo treino
+
 exports.criarTreino = (req, res) => {
     const { nome, data, exercicios } = req.body;
     
@@ -18,19 +18,19 @@ exports.criarTreino = (req, res) => {
     res.status(201).json(novoTreino);
 };
 
-// Listar todos os treinos
+
 exports.listarTreinos = (req, res) => {
     res.json(treinos);
 };
 
-// Buscar um treino por ID
+
 exports.buscarTreinoPorId = (req, res) => {
     const treino = treinos.find(t => t.id == req.params.id);
     if (!treino) return res.status(404).json({ mensagem: 'Treino não encontrado' });
     res.json(treino);
 };
 
-// Atualizar um treino
+
 exports.atualizarTreino = (req, res) => {
     const treino = treinos.find(t => t.id == req.params.id);
     if (!treino) return res.status(404).json({ mensagem: 'Treino não encontrado' });
@@ -50,8 +50,8 @@ exports.atualizarTreino = (req, res) => {
     res.json(treino);
 };
 
-// Excluir um treino
+
 exports.excluirTreino = (req, res) => {
     treinos = treinos.filter(t => t.id != req.params.id);
-    res.status(204).send(); // Sem conteúdo, apenas confirma a exclusão
+    res.status(204).send(); 
 };
