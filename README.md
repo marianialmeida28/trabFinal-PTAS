@@ -1,8 +1,8 @@
-# Acompanhamento de Treinos e Exercícios Físicos 💪
+# Acompanhamento de Treinos e Exercícios Físicos 
 
 Este é um sistema simples de gerenciamento de treinos e exercícios físicos via API.
 
-## 🚀 Como rodar o projeto
+## Como rodar o projeto
 
 1. Instale as dependências:
    ```sh
@@ -16,7 +16,7 @@ Este é um sistema simples de gerenciamento de treinos e exercícios físicos vi
 
 3. Acesse a API via [http://localhost:3000/treinos](http://localhost:3000/treinos)
 
-## 📌 Rotas disponíveis e como testar
+## Rotas disponíveis e como testar
 
 ### ➤ Criar um novo treino
 - *Método:* POST
@@ -137,7 +137,7 @@ Este é um sistema simples de gerenciamento de treinos e exercícios físicos vi
   curl -X DELETE http://localhost:3000/treinos/1
   ```
 
-## 🛠 Como testar com Postman
+## Como testar com Postman
 1. Abra o Postman.
 2. Escolha o método (POST, GET, PUT, DELETE).
 3. Insira a URL correspondente.
