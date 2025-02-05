@@ -1,12 +1,11 @@
-const express = require('express');
+import express from 'express'
+import {addTreinos, listarTreinos, atualizarTreinos, excluirTreinos, buscarTreinosPorId} from '../controllers/treinosController.js';
 const router = express.Router();
-const treinosController = require('../controllers/treinosController.js');
 
+router.post('/', addTreinos);
+router.get('/', listarTreinos);
+router.get('/:id', buscarTreinosPorId);
+router.put('/:id', atualizarTreinos);
+router.delete('/:id', excluirTreinos);
 
-router.post('/', treinosController.criarTreino);
-router.get('/', treinosController.listarTreinos);
-router.get('/:id', treinosController.buscarTreinoPorId);
-router.put('/:id', treinosController.atualizarTreino);
-router.delete('/:id', treinosController.excluirTreino);
-
-module.exports = router;
+export {router}

@@ -1,57 +1,106 @@
-let treinos = []; 
+import {randomUUID} from 'node:crypto'
+import { Treino } from '../models/treinos.js'
 
 
-exports.criarTreino = (req, res) => {
-    const { nome, data, exercicios } = req.body;
-    
-    if (typeof nome !== 'string' || nome.trim() === '') {
-        return res.status(400).json({ mensagem: 'Nome do treino deve ser uma string não vazia' });
+const listarTreinos = async (req, res) => {
+    try {
+        const treinos = await Treino.find()
+        res.json(treinos)
+    } catch (error) {
+        console.log(error)
+        return res.json({
+            erro: true,
+            mensagem: 'erro ao fazer requisição'
+        })
     }
-    
-    if (!Array.isArray(exercicios) || exercicios.length === 0) {
-        return res.status(400).json({ mensagem: 'Exercícios não podem ser vazios' });
+}
+
+const addTreinos = (req, res) => {
+    const {nome, treino} = req. body
+
+    if (!nome || !treino) {
+        return res.json({
+            erro: true,
+            mensagem: 'Falta valores a inserir'
+        })}
+    const addTreino = new Treino({nome, treino})
+
+        try {
+            addTreino.save()
+            return res.json({
+                erro: false,
+                mensagem: 'Valor inserido no banco',
+                treino: addTreino
+            })
+        }
+         catch (error) {
+            console.log(error)
+            return res.json ({
+                erro: true,
+                mensagem: error
+        })
     }
-    
-    const id = treinos.length + 1;
-    const novoTreino = { id, nome, data, exercicios };
-    treinos.push(novoTreino);
-    res.status(201).json(novoTreino);
-};
+}
 
+const buscarTreinosPorId = (req, res) => {
+    const {id} = req.params
+    const treinos = treinos.find((l) => l.id === parseInt(id))
 
-exports.listarTreinos = (req, res) => {
-    res.json(treinos);
-};
-
-
-exports.buscarTreinoPorId = (req, res) => {
-    const treino = treinos.find(t => t.id == req.params.id);
-    if (!treino) return res.status(404).json({ mensagem: 'Treino não encontrado' });
-    res.json(treino);
-};
-
-
-exports.atualizarTreino = (req, res) => {
-    const treino = treinos.find(t => t.id == req.params.id);
-    if (!treino) return res.status(404).json({ mensagem: 'Treino não encontrado' });
-
-    const { nome, data, exercicios } = req.body;
-    
-    if (nome && (typeof nome !== 'string' || nome.trim() === '')) {
-        return res.status(400).json({ mensagem: 'Nome do treino deve ser uma string não vazia' });
+    if(!treinos) {
+        return res.json ({
+            erro: true,
+            mensagem: 'treino não encontrado'
+        })
     }
-    if (exercicios && (!Array.isArray(exercicios) || exercicios.length === 0)) {
-        return res.status(400).json({ mensagem: 'Exercícios devem ser fornecidos como uma lista não vazia' });
+    res.json(treinos)
+}
+
+const atualizarTreinos = (req, res) => {
+    const {id} = req.params;
+    const {nome, treino}= req.body;
+
+    const treinos = treinos.find((l) => l.id === (id));
+
+    if (!treinos){
+        return res.json({
+            erro: true,
+            mensagem: 'treino não encontrado'
+        })
     }
-    
-    treino.nome = nome || treino.nome;
-    treino.data = data || treino.data;
-    treino.exercicios = exercicios || treino.exercicios;
-    res.json(treino);
-};
 
+    if (!nome || !treino) {
+        return res.json({
+            erro: true,
+            mensagem: 'Todos os campos são obrigatórios'
+        })
+    }
 
-exports.excluirTreino = (req, res) => {
-    treinos = treinos.filter(t => t.id != req.params.id);
-    res.status(204).send(); 
-};
+    treinos.nome = nome;
+    treinos.treino = treino;
+
+    res.json({
+        erro: false,
+        mensagem: 'treino alterado com sucesso'
+        
+    })
+}
+
+const excluirTreinos = (req, res) => {
+    const {id} = req.params;
+    const index = treinos.findIndex((l) => l.id === (id))
+
+    if(index === -1){
+        return res.json({
+            erro: true,
+            mensagem: 'Treino não encontrado'
+        })
+    }
+
+    treinos.splice(index, 1);
+    res.json({
+        erro: false,
+        mensagem: 'Treino deletado'
+    })
+}
+
+    export {listarTreinos, addTreinos, buscarTreinosPorId, atualizarTreinos, excluirTreinos}
