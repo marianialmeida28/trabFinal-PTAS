@@ -5,7 +5,7 @@ const app = express()
 
 app.use(express.json())
 
-mongoose.connect('mongodb://localhost:27017')
+mongoose.connect('mongodb://localhost:27017/treinos')
 .then(()=> {console.log("Conectado ao banco")})
 .catch(err => {console.log(err)})
 
