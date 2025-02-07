@@ -42,65 +42,72 @@ const addTreinos = (req, res) => {
     }
 }
 
-const buscarTreinosPorId = (req, res) => {
-    const {id} = req.params
-    const treinos = treinos.find((l) => l.id === parseInt(id))
-
-    if(!treinos) {
-        return res.json ({
-            erro: true,
-            mensagem: 'treino não encontrado'
-        })
-    }
-    res.json(treinos)
-}
-
-const atualizarTreinos = (req, res) => {
-    const {id} = req.params;
-    const {nome, treino}= req.body;
-
-    const treinos = treinos.find((l) => l.id === (id));
-
-    if (!treinos){
-        return res.json({
-            erro: true,
-            mensagem: 'treino não encontrado'
-        })
-    }
-
-    if (!nome || !treino) {
-        return res.json({
-            erro: true,
-            mensagem: 'Todos os campos são obrigatórios'
-        })
-    }
-
-    treinos.nome = nome;
-    treinos.treino = treino;
-
-    res.json({
-        erro: false,
-        mensagem: 'treino alterado com sucesso'
+const buscarTreinosPorId = async (req, res) => {
+    
+    try {
+        const {id} = req.params
+        const treinos = await treinos.findById(id);
+    
+        if(!treinos) {
+            return res.json ({
+                erro: true,
+                mensagem: 'treino não encontrado'
+            })
+        }
+        res.json(treinos)
         
-    })
-}
-
-const excluirTreinos = (req, res) => {
-    const {id} = req.params;
-    const index = treinos.findIndex((l) => l.id === (id))
-
-    if(index === -1){
+    } catch (error) {
+        console.log(error)
         return res.json({
             erro: true,
-            mensagem: 'Treino não encontrado'
+            mensagem: 'ID inválido'
         })
     }
+}
 
-    treinos.splice(index, 1);
-    res.json({
-        erro: false,
-        mensagem: 'Treino deletado'
-    })
+const atualizarTreinos =  async (req, res) => {
+    try{
+        const {id} = req.params;
+        const treinos = await treinos.findByIdAndUpdate(id, req.body, {new: true})
+        if (!treinos){
+            return res.json({
+                erro: true,
+                mensagem: 'treino não encontrado'
+            })
+        }
+        res.json({
+            erro: false, 
+            treinos
+        })
+    } catch (error) {
+        res.json({
+        erro: true,
+        mensagem: 'treinos não encontrado'
+        })
+    }
+}
+
+const excluirTreinos = async (req, res) => {
+    try{
+        const {id} = req.params
+        const treinos = await treinos.findByIdAndDelete(id)
+        if (!treinos){
+            return res.json({
+                erro: true,
+                mensagem: 'treino não encontrado'
+            })
+        }
+        res.json({
+            erro: false,
+            mensagem: 'treino excluído com sucesso'
+        })
+    } catch (error){
+        console.log(error)
+        res.json({
+            erro: true,
+            mensagem: error
+        })
+    }
 }
 
     export {listarTreinos, addTreinos, buscarTreinosPorId, atualizarTreinos, excluirTreinos}
